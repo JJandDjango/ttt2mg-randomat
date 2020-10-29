@@ -11,13 +11,13 @@ MINIGAME.conVarData = {
     min = 1,
     max = 10,
     decimal = 1,
-    desc = "(Def. 2.5)"
+    desc = "ttt2_minigames_crowbar_dmg (Def. 2.5)"
   },
   ttt2_minigames_crowbar_push = {
     slider = true,
     min = 1,
     max = 100,
-    desc = "(Def. 20)"
+    desc = "ttt2_minigames_crowbar_push (Def. 20)"
   }
 }
 
@@ -30,19 +30,24 @@ if CLIENT then
       English = ""
     }
   }
-else
-  ttt2_minigames_crowbar_dmg = CreateConVar("ttt2_minigames_crowbar_dmg", "2.5", {FCVAR_ARCHIVE}, "Damage Multiplier for the crowbar")
-  ttt2_minigames_crowbar_push = CreateConVar("ttt2_minigames_crowbar_push", "20", {FCVAR_ARCHIVE}, "Push force multiplier for the crowbar")
+
 end
 
 if SERVER then
+  local ttt2_minigames_crowbar_dmg = CreateConVar("ttt2_minigames_crowbar_dmg", "2.5", {FCVAR_ARCHIVE}, "Damage Multiplier for the crowbar")
+  local ttt2_minigames_crowbar_push = CreateConVar("ttt2_minigames_crowbar_push", "20", {FCVAR_ARCHIVE}, "Push force multiplier for the crowbar")
+  local push
   function MINIGAME:OnActivation()
     push = GetConVar("ttt_crowbar_pushforce"):GetInt()
     RunConsoleCommand("ttt_crowbar_pushforce", push * ttt2_minigames_crowbar_push:GetFloat())
-    for k, ply in ipairs(player.GetAll()) do
-      for _, wep in ipairs(ply:GetWeapons()) do
+    local plys = util.GetAlivePlayers()
+    for i = 1, #plys do
+      local weps = plys[i]:GetWeapons()
+      for j = 1, #weps do
+        local wep = weps[j]
         if wep:GetClass() == "weapon_zm_improvised" then
           wep.Primary.Damage = wep.Primary.Damage * ttt2_minigames_crowbar_dmg:GetFloat()
+          break
         end
       end
     end
@@ -50,5 +55,16 @@ if SERVER then
 
   function MINIGAME:OnDeactivation()
     RunConsoleCommand("ttt_crowbar_pushforce", push)
+    local plys = util.GetAlivePlayers()
+    for i = 1, #plys do
+      local weps = plys[i]:GetWeapons()
+      for j = 1, #weps do
+        local wep = weps[j]
+        if wep:GetClass() == "weapon_zm_improvised" then
+          wep.Primary.Damage = wep.Primary.Damage / ttt2_minigames_crowbar_dmg:GetFloat()
+          break
+        end
+      end
+    end
   end
 end

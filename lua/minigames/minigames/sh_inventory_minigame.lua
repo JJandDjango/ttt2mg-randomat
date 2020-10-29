@@ -10,7 +10,7 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 60,
-    desc = "(Def. 15)"
+    desc = "ttt2_minigames_inventory_timer (Def. 15)"
   }
 }
 
@@ -23,11 +23,10 @@ if CLIENT then
       English = ""
     }
   }
-else
-  ttt2_minigames_inventory_timer = CreateConVar("ttt2_minigames_inventory_timer", "15", {FCVAR_ARCHIVE}, "Time between inventory swaps")
 end
 
 if SERVER then
+  local ttt2_minigames_inventory_timer = CreateConVar("ttt2_minigames_inventory_timer", "15", {FCVAR_ARCHIVE}, "Time between inventory swaps")
   function MINIGAME:OnActivation()
     local ply1
     local ply2

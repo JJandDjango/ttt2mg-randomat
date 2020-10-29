@@ -10,7 +10,7 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 200,
-    desc = "(Def. 100)"
+    desc = "ttt2_minigames_president_bonushp (Def. 100)"
   }
 }
 
@@ -23,34 +23,19 @@ if CLIENT then
       English = ""
     }
   }
-else
-  ttt2_minigames_president_bonushp = CreateConVar("ttt2_minigames_president_bonushp", "100", {FCVAR_ARCHIVE}, "Extra health gained by the detective")
 end
 
 if SERVER then
+  local ttt2_minigames_president_bonushp = CreateConVar("ttt2_minigames_president_bonushp", "100", {FCVAR_ARCHIVE}, "Extra health gained by the detective")
   function MINIGAME:OnActivation()
-    local d = 0
-    local pres
-    for _, ply in pairs(player.GetAll()) do
-      if not ply:Alive() or d == 1 then continue end
-
-      if ply:GetBaseRole() == ROLE_DETECTIVE then
-        d = 1
-        pres = ply
+    local plys = util.GetAlivePlayers()
+    local pres = nil
+    for i = 1, #plys do
+      if plys[i]:GetBaseRole() == ROLE_DETECTIVE and not pres then
+        pres = plys[i]
       end
     end
-    if not pres then
-      for _, ply in RandomPairs(player.GetAll()) do
-        if pres then continue end
-        if ply:Alive() and not ply:IsSpec() and ply:HasTeam(TEAM_INNOCENT) then
-          ply:SetRole(ROLE_DETECTIVE)
-          SendFullStateUpdate()
-          pres = ply
-        end
-      end
-    end
-
-    if not pres then return false end
+    if not pres then return end
 
     pres:SetMaxHealth(100 + ttt2_minigames_president_bonushp:GetInt())
     pres:SetHealth(pres:GetMaxHealth())
@@ -68,5 +53,13 @@ if SERVER then
 
   function MINIGAME:OnDeactivation()
     hook.Remove("PostPlayerDeath", "PresidentMinigame")
+  end
+
+  function MINIGAME:IsSelectable()
+    local plys = util.GetAlivePlayers()
+    for i = 1, #plys do
+      if plys[i]:GetBaseRole() == ROLE_DETECTIVE then return true end
+    end
+    return false
   end
 end

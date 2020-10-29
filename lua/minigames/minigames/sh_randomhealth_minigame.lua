@@ -10,14 +10,14 @@ MINIGAME.conVarData = {
     slider = true,
     min = -100,
     max = 100,
-    desc = "(Def. 100)"
+    desc = "ttt2_minigames_randomhealth_up (Def. 100)"
   },
 
   ttt2_minigames_randomhealth_lw = {
     slider = true,
     min = -100,
     max = 100,
-    desc = "(Def. 0)"
+    desc = "ttt2_minigames_randomhealth_lw (Def. 0)"
   }
 }
 
@@ -30,15 +30,15 @@ if CLIENT then
       English = ""
     }
   }
-else
-  ttt2_minigames_randomhealth_up = CreateConVar("ttt2_minigames_randomhealth_up", "100", {FCVAR_ARCHIVE}, "Upper limit for random health gained")
-  ttt2_minigames_randomhealth_lw = CreateConVar("ttt2_minigames_randomhealth_lw", "0", {FCVAR_ARCHIVE}, "Lower limit for random health gained")
 end
 
 if SERVER then
+  local ttt2_minigames_randomhealth_up = CreateConVar("ttt2_minigames_randomhealth_up", "100", {FCVAR_ARCHIVE}, "Upper limit for random health gained")
+  local ttt2_minigames_randomhealth_lw = CreateConVar("ttt2_minigames_randomhealth_lw", "0", {FCVAR_ARCHIVE}, "Lower limit for random health gained")
   function MINIGAME:OnActivation()
-    for _, ply in ipairs(player.GetAll()) do
-      if not ply:Alive() or ply:IsSpec() then continue end
+    local plys = util.GetAlivePlayers()
+    for i = 1, #plys do
+      local ply = plys[i]
 
       local newhealth = ply:Health() + math.random(ttt2_minigames_randomhealth_lw:GetInt(), ttt2_minigames_randomhealth_up:GetInt())
 

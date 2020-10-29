@@ -14,7 +14,6 @@ if CLIENT then
       English = ""
     }
   }
-else
 end
 
 if SERVER then
@@ -23,14 +22,15 @@ if SERVER then
     if ply.randomweptries == 100 then ply.randomweptries = nil return end
     ply.randomweptries = ply.randomweptries + 1
 
-    local weps = {}
-    for _, wep in ipairs(weapons.GetList()) do
-      if wep and wep.CanBuy then
-        table.insert(weps, wep)
+    local weps = weapons.GetList()
+    local pocket_weps = {}
+    for i = 1, #weps do
+      local wep = weps[i]
+      if wep and (wep.CanBuy and #wep.CanBuy > 0) then
+        pocket_weps[#pocket_weps + 1] = wep
       end
     end
-    table.Shuffle(weps)
-    local item = table.Random(weps)
+    local item = pocket_weps[math.random(#pocket_weps)]
     local is_item = tonumber(item.id)
     local swep_table = (not is_item) and weapons.GetStored(item.ClassName) or nil
 
@@ -39,15 +39,11 @@ if SERVER then
         GiveRandomWeapon(ply)
       else
         ply:GiveEquipmentItem(is_item)
-        hook.Call("TTTOrderedEquipment", ply, is_item, true)
-        hook.Call("TTT2OrderedEquipment", ply, is_item, true, 0, true)
         ply.randomweptries = 0
       end
     elseif swep_table then
       if ply:CanCarryWeapon(swep_table) then
         ply:Give(item.ClassName)
-        hook.Call("TTTOrderedEquipment", ply, item.ClassName, false)
-        hook.Call("TTT2OrderedEquipment", ply, item.ClassName, false, 0, true)
         if swep_table.WasBought then
           swep_table:WasBought(ply)
         end
@@ -60,8 +56,9 @@ if SERVER then
 
   function MINIGAME:OnActivation()
     timer.Simple(0.1, function()
-      for _, ply in ipairs(player.GetAll()) do
-        if not ply:Alive() or ply:IsSpec() then continue end
+      local plys = util.GetAlivePlayers()
+      for i = 1, #plys do
+        local ply = plys[i]
         ply.randomweptries = 0
         GiveRandomWeapon(ply)
       end

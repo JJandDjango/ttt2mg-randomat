@@ -10,7 +10,7 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 1000,
-    desc = "(Def. 100)"
+    desc = "ttt2_minigames_murder_knife_dmg (Def. 100)"
   },
 
   ttt2_minigames_murder_knife_speed = {
@@ -18,7 +18,7 @@ MINIGAME.conVarData = {
     min = 1,
     max = 2,
     decimal = 1,
-    desc = "(Def. 1.2)"
+    desc = "ttt2_minigames_murder_knife_speed (Def. 1.2)"
   }
 }
 
@@ -32,8 +32,6 @@ if CLIENT then
     }
   }
 else
-  ttt2_minigames_murder_knife_dmg = GetConVar("ttt2_minigames_murder_knife_dmg", "100", {FCVAR_ARCHIVE}, "Murder knife damage")
-  ttt2_minigames_murder_knife_speed = CreateConVar("ttt2_minigames_murder_knife_speed", "1.2", {FCVAR_ARCHIVE}, "Murder knife speed")
   util.AddNetworkString("MurderMinigameActive")
 end
 
@@ -46,6 +44,7 @@ function IsEvil(ply)
 end
 
 if SERVER then
+  local ttt2_minigames_murder_knife_speed = CreateConVar("ttt2_minigames_murder_knife_speed", "1.2", {FCVAR_ARCHIVE}, "Murder knife speed")
   function StripBannedWeapons(ply)
     for _, wep in ipairs(ply:GetWeapons()) do
       if wep.ClassName == "weapon_ttt_minigame_murknife" then continue end
@@ -57,6 +56,9 @@ if SERVER then
     end
   end
 
+  function MINIGAME:IsSelectable()
+    return false
+  end
 
   function MINIGAME:OnActivation()
     plys = {}
@@ -102,7 +104,6 @@ if SERVER then
       elseif ply:GetSubRole() ~= ROLE_INNOCENT then
         ply:SetRole(ROLE_INNOCENT, TEAM_INNOCENT)
         SendFullStateUpdate()
-      else
         -- print("[TTT2][sh_murder_minigame] Did nothing to " .. ply:Nick())
       end
 

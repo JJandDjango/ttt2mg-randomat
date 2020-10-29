@@ -11,7 +11,7 @@ MINIGAME.conVarData = {
     min = 0,
     max = 3,
     decimal = 1,
-    desc = "(Def. 1.5)"
+    desc = "ttt2_minigames_fov_scale (Def. 1.5)"
   }
 }
 
@@ -25,22 +25,23 @@ if CLIENT then
       English = ""
     }
   }
-else
-  ttt2_minigames_fov_scale = CreateConVar("ttt2_minigames_fov_scale", "1.5", {FCVAR_ARCHIVE}, "Scale of fov increase")
 end
 
 if SERVER then
+  local ttt2_minigames_fov_scale = CreateConVar("ttt2_minigames_fov_scale", "1.5", {FCVAR_ARCHIVE}, "Scale of fov increase")
   function MINIGAME:OnActivation()
-    starting_plys = {}
+    local plys = util.GetAlivePlayers()
     local changed_fov = {}
 
-    for k, ply in ipairs(player.GetAll()) do
-      starting_plys[k] = ply
+    for i = 1, #plys do
+      local ply = plys[i]
       changed_fov[ply] = ply:GetFOV() * ttt2_minigames_fov_scale:GetFloat()
     end
 
     timer.Create("FOVMinigame", 0.1, 0, function()
-      for _, ply in pairs(starting_plys) do
+      for i = 1, #plys do
+        local ply = plys[i]
+        if not IsValid(ply) then continue end
         if ply:Alive() and not ply:IsSpec() then
           ply:SetFOV(changed_fov[ply], 0)
         else

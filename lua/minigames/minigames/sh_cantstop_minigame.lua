@@ -8,7 +8,7 @@ MINIGAME.contact = "Zzzaaaccc13 on TTT2 Discord"
 MINIGAME.conVarData = {
   ttt2_minigames_cantstop_disable_back = {
     checkbox = true,
-    desc = "(Def. 1)"
+    desc = "ttt2_minigames_cantstop_disable_back (Def. 1)"
   }
 }
 
@@ -21,27 +21,23 @@ if CLIENT then
       English = "Won't Stop!"
     }
   }
-else
-  ttt2_minigames_cantstop_disable_back = CreateConVar("ttt2_minigames_cantstop_disable_back", "1", {FCVAR_ARCHIVE}, "Disable the \"s\" key")
 end
 
 if SERVER then
+  local ttt2_minigames_cantstop_disable_back = CreateConVar("ttt2_minigames_cantstop_disable_back", "1", {FCVAR_ARCHIVE}, "Disable the \"s\" key")
   function MINIGAME:OnActivation()
-    local plys = {}
-    for k, ply in ipairs(player.GetAll()) do
-      plys[k] = ply
-    end
-
     hook.Add("Think", "CantStopMinigame", function()
-      for _, ply in ipairs(player.GetAll()) do
+      local plys = player.GetAll()
+      for i = 1, #plys do
+        local ply = plys[i]
         if ply:Alive() and not ply:IsSpec() then
           ply:ConCommand("+forward")
           if ttt2_minigames_cantstop_disable_back:GetBool() then
             ply:ConCommand("-back")
           end
-        else
+        elseif not ply.MgExcept then
           ply:ConCommand("-forward")
-          plys[_] = nil
+          ply.MgExcept = true
         end
       end
     end)
@@ -49,8 +45,10 @@ if SERVER then
 
   function MINIGAME:OnDeactivation()
     hook.Remove("Think", "CantStopMinigame")
-    for _, ply in ipairs(player.GetAll()) do
-      ply:ConCommand("-forward")
+    local plys = player.GetAll()
+    for i = 1, #plys do
+      plys[i]:ConCommand("-forward")
+      plys[i].MgExcept = nil
     end
   end
 end

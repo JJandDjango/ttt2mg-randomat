@@ -11,7 +11,7 @@ MINIGAME.conVarData = {
     min = 0,
     max = 1,
     decimal = 1,
-    desc = "(Def. 0.1)"
+    desc = "ttt2_minigames_moongravity_gravity (Def. 0.1)"
   }
 }
 
@@ -24,26 +24,29 @@ if CLIENT then
       English = ""
     }
   }
-else
-  ttt2_minigames_moongravity_gravity = CreateConVar("ttt2_minigames_moongravity_gravity", "0.1", {FCVAR_ARCHIVE}, "Gravity multiplier")
 end
 
 if SERVER then
+  local ttt2_minigames_moongravity_gravity = CreateConVar("ttt2_minigames_moongravity_gravity", "0.1", {FCVAR_ARCHIVE}, "Gravity multiplier")
   function MINIGAME:OnActivation()
-    for _, ply in ipairs(player.GetAll()) do
+    local plys = player.GetAll()
+    for i = 1, #plys do
+      local ply = plys[i]
       if ply:Alive() and not ply:IsSpec() then ply:SetGravity(ttt2_minigames_moongravity_gravity:GetFloat()) end
-      timer.Create("GravityMinigame", 1, 0, function()
-        for k, ply in ipairs(player.GetAll()) do
-          if ply:Alive() and not ply:IsSpec() then ply:SetGravity(ttt2_minigames_moongravity_gravity:GetFloat()) end
-        end
-      end)
     end
+    timer.Create("GravityMinigame", 1, 0, function()
+      for i = 1, #plys do
+        local ply = plys[i]
+        if ply:Alive() and not ply:IsSpec() then ply:SetGravity(ttt2_minigames_moongravity_gravity:GetFloat()) end
+      end
+    end)
   end
 
   function MINIGAME:OnDeactivation()
     timer.Remove("GravityMinigame")
-    for _, ply in ipairs(player.GetAll()) do
-      ply:SetGravity(1)
+    local plys = player.GetAll()
+    for i = 1, #plys do
+      plys[i]:SetGravity(1)
     end
   end
 end

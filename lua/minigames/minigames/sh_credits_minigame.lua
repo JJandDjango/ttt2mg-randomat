@@ -10,7 +10,7 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 10,
-    desc = "(Def. 1)"
+    desc = "ttt2_minigames_credits_count (Def. 1)"
   }
 }
 
@@ -23,15 +23,15 @@ if CLIENT then
       English = ""
     }
   }
-else
-  ttt2_minigames_credits_count = CreateConVar("ttt2_minigames_credits_count", "1", {FCVAR_ARCHIVE}, "How many credits should be available at a time?")
 end
 
 if SERVER then
+  local ttt2_minigames_credits_count = CreateConVar("ttt2_minigames_credits_count", "1", {FCVAR_ARCHIVE}, "How many credits should be available at a time?")
   function MINIGAME:OnActivation()
+    local plys = player.GetAll()
     timer.Create("CreditsMinigame", 0, 0, function()
-      for _, ply in ipairs(player.GetAll()) do
-        ply:SetCredits(ttt2_minigames_credits_count:GetInt())
+      for i = 1, #plys do
+        plys[i]:SetCredits(ttt2_minigames_credits_count:GetInt())
       end
     end)
   end

@@ -11,7 +11,7 @@ MINIGAME.conVarData = {
     min = 0,
     max = 1,
     decimal = 1,
-    desc = "(Def. 0.5)"
+    desc = "ttt2_minigames_shrink_scale (Def. 0.5)"
   }
 }
 
@@ -24,16 +24,17 @@ if CLIENT then
       English = "Honey, I shrunk the terrorists!"
     }
   }
-else
-  ttt2_minigames_shrink_scale = CreateConVar("ttt2_minigames_shrink_scale", "0.5", {FCVAR_ARCHIVE}, "Shrinking scale factor")
 end
 
 if SERVER then
+  local ttt2_minigames_shrink_scale = CreateConVar("ttt2_minigames_shrink_scale", "0.5", {FCVAR_ARCHIVE}, "Shrinking scale factor")
   local rat = ttt2_minigames_shrink_scale:GetFloat()
   function MINIGAME:OnActivation()
     local scal = ttt2_minigames_shrink_scale:GetFloat()
+    local plys = player.GetAll()
 
-    for _, ply in ipairs(player.GetAll()) do
+    for i = 1, #plys do
+      local ply = plys[i]
       if ply:IsSpec() or not ply:Alive() then continue end
 
       ply:SetStepSize(ply:GetStepSize() * scal, 1)
@@ -52,7 +53,8 @@ if SERVER then
     end
 
     timer.Create("ShrinkMinigameHP", 1, 0, function()
-      for _, ply in ipairs(player.GetAll()) do
+      for i = 1, #plys do
+        local ply = plys[i]
         if not ply:Alive() or ply:IsSpec() then continue end
 
         rat = ply:GetStepSize() / 18
@@ -66,7 +68,9 @@ if SERVER then
 
   function MINIGAME:OnDeactivation()
     hook.Remove("TTTPlayerSpeed", "ShrinkMinigameSpeed")
-    for _, ply in ipairs(player.GetAll()) do
+    local plys = player.GetAll()
+    for i = 1, #plys do
+      local ply = plys[i]
       ply:SetModelScale(1, 1)
       ply:SetViewOffset(Vector(0, 0, 64))
       ply:SetViewOffsetDucked(Vector(0, 0, 32))

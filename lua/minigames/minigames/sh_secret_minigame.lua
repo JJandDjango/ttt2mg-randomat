@@ -8,7 +8,7 @@ MINIGAME.contact = "Zzzaaaccc13 on TTT2 Discord"
 if CLIENT then
   MINIGAME.lang = {
     name = {
-      English = "Sudden Death!"
+      English = "Shh... It's a Secret"
     },
     desc = {
       English = ""
@@ -19,15 +19,25 @@ end
 if SERVER then
   function MINIGAME:OnActivation()
     local plys = util.GetAlivePlayers()
-    timer.Create("SuddenDeathMinigame", 1, 0, function()
-      for i = 1, #plys do
-        plys[i]:SetHealth(1)
-        plys[i]:SetMaxHealth(1)
+    for i = 1, #plys do
+      local ply = plys[i]
+
+      if ply:GetBaseRole() == ROLE_INNOCENT then
+        ply:SetRole(ROLE_SPY)
       end
-    end)
+    end
+    SendFullStateUpdate()
   end
 
   function MINIGAME:OnDeactivation()
-    timer.Remove("SuddenDeathMinigame")
+
+  end
+
+  function MINIGAME:IsSelectable()
+    if not SPY then
+      return false
+    else
+      return true
+    end
   end
 end

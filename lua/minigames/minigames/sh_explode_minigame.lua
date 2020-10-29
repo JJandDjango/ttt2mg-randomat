@@ -10,19 +10,19 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 120,
-    desc = "(Def. 30)"
+    desc = "ttt2_minigames_explode_timer (Def. 30)"
   }
 }
 
-ttt2_minigames_explode_timer = CreateConVar("ttt2_minigames_explode_timer", "30", {FCVAR_ARCHIVE, FCVAR_REPLICATED}, "Delay between explosions")
 
+local ttt2_minigames_explode_timer = CreateConVar("ttt2_minigames_explode_timer", "30", {FCVAR_ARCHIVE, FCVAR_REPLICATED}, "Delay between explosions")
 if CLIENT then
   MINIGAME.lang = {
     name = {
       English = "Random Player Explosions!"
     },
     desc = {
-      English = "A Random Person Will Explode every " .. ttt2_minigames_explode_timer:GetInt() .. " seconds!"
+      English = "A Random Person Will Explode every {time} seconds!"
     }
   }
 else
@@ -35,17 +35,15 @@ if SERVER then
     local effectdata = EffectData()
 
     timer.Create("MinigameExplode", ttt2_minigames_explode_timer:GetInt(), 0, function()
-      local plys = {}
-      for _, ply in ipairs(player.GetAll()) do
-        if ply:GetBaseRole() ~= ROLE_DETECTIVE then
-          table.insert(plys, ply)
-        end
+      local plys = util.GetAlivePlayers()
+      local ply = plys[math.random(#plys)]
+      local explodetries = 0
+      while ply:GetBaseRole() == ROLE_DETECTIVE and explodetries < 100 do
+        ply = plys[math.random(#plys)]
+        explodetries = explodetries + 1
       end
 
-
-      local ply = plys[math.random(#plys)]
-
-      if IsValid(ply) and ply:Alive() and not ply:IsSpec() then
+      if IsValid(ply) and ply:Alive() and not ply:IsSpec() and ply:GetBaseRole() ~= ROLE_DETECTIVE then
         net.Start("explosion_minigame_exploded")
         net.WriteString(ply:Nick())
         net.Broadcast()
@@ -73,11 +71,26 @@ if SERVER then
 end
 
 if CLIENT then
+  function MINIGAME:ShowActivationEPOP() end
+  net.Receive("ttt2mg_explode_epop", function()
+    local time = net.ReadInt(32)
+    local name = net.ReadString()
+    EPOP:AddMessage({
+        text = LANG.TryTranslation("ttt2_minigames_" .. name .. "_name"),
+        color = COLOR_ORANGE
+      },
+      LANG.GetParamTranslation("ttt2_minigames_" .. name .. "_desc", {time = time}),
+      12,
+      nil,
+      true
+    )
+  end)
+
   net.Receive("explosion_minigame_exploded", function()
     local name = net.ReadString()
 
     EPOP:AddMessage({
-      text = name .. " exploded!",
+      text = LANG.GetParamTranslation("ttt2mg_explode_epop", {nick = name}),
       color = COLOR_ORANGE,
       6
     })

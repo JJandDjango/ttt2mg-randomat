@@ -10,7 +10,7 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 60,
-    desc = "(Def. 15)"
+    desc = "ttt2_minigames_switch_timer (Def. 15)"
   }
 }
 
@@ -24,11 +24,11 @@ if CLIENT then
     }
   }
 else
-  ttt2_minigames_switch_timer = CreateConVar("ttt2_minigames_switch_timer", "15", {FCVAR_ARCHIVE}, "Time between switches")
   util.AddNetworkString("switch_minigame_popup")
 end
 
 if SERVER then
+  local ttt2_minigames_switch_timer = CreateConVar("ttt2_minigames_switch_timer", "15", {FCVAR_ARCHIVE}, "Time between switches")
   function MINIGAME:OnActivation()
     timer.Create("SwitchMinigameTimer", ttt2_minigames_switch_timer:GetInt(), 0, function()
       local i = 0
@@ -62,10 +62,12 @@ end
 if CLIENT then
   net.Receive("switch_minigame_popup", function()
     EPOP:AddMessage({
-      text = "Go!",
+      text = LANG.TryTranslation("ttt2mg_switch_epop"),
       color = COLOR_ORANGE},
-      "",
-      2
+      nil,
+      2,
+      nil,
+      true
     )
   end)
 end

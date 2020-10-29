@@ -10,14 +10,14 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 100,
-    desc = "(Def. 25)"
+    desc = "ttt2_minigames_lifesteal_health (Def. 25)"
   },
 
   ttt2_minigames_lifesteal_cap = {
     slider = true,
     min = 0,
     max = 300,
-    desc = "(Def. 0)"
+    desc = "ttt2_minigames_lifesteal_cap (Def. 0)"
   }
 }
 
@@ -30,12 +30,11 @@ if CLIENT then
       English = "Gain life for killing people... Is it worth it?"
     }
   }
-else
-  ttt2_minigames_lifesteal_health = CreateConVar("ttt2_minigames_lifesteal_health", "25", {FCVAR_ARCHIVE}, "Health gained per kill")
-  ttt2_minigames_lifesteal_cap = CreateConVar("ttt2_minigames_lifesteal_cap", "0", {FCVAR_ARCHIVE}, "Max health from event (0 to disable)")
 end
 
 if SERVER then
+  local ttt2_minigames_lifesteal_health = CreateConVar("ttt2_minigames_lifesteal_health", "25", {FCVAR_ARCHIVE}, "Health gained per kill")
+  local ttt2_minigames_lifesteal_cap = CreateConVar("ttt2_minigames_lifesteal_cap", "0", {FCVAR_ARCHIVE}, "Max health from event (0 to disable)")
   function MINIGAME:OnActivation()
     hook.Add("TTT2PostPlayerDeath", "LifestealMinigame", function(ply, _, attacker)
       if not IsValid(ply) then return end
@@ -50,6 +49,6 @@ if SERVER then
   end
 
   function MINIGAME:OnDeactivation()
-    hook.Remove("PostPlayerDeath", "LifestealMinigame")
+    hook.Remove("TTT2PostPlayerDeath", "LifestealMinigame")
   end
 end

@@ -10,7 +10,7 @@ MINIGAME.conVarData = {
     slider = true,
     min = 1,
     max = 60,
-    desc = "(Def. 30)"
+    desc = "ttt2_minigames_blind_duration (Def. 30)"
   }
 }
 
@@ -24,12 +24,12 @@ if CLIENT then
     }
   }
 else
-  ttt2_minigames_blind_duration = CreateConVar("ttt2_minigames_blind_duration", "30", {FCVAR_ARCHIVE}, "Duration of the traitor's blindness")
   util.AddNetworkString("blind_minigame")
 end
 
 
 if SERVER then
+  local ttt2_minigames_blind_duration = CreateConVar("ttt2_minigames_blind_duration", "30", {FCVAR_ARCHIVE}, "Duration of the traitor's blindness")
   function TriggerBlind()
     net.Start("blind_minigame")
     net.WriteBool(true)
@@ -76,7 +76,7 @@ if CLIENT then
 
     if client:HasTeam(TEAM_TRAITOR) then
       surface.SetDrawColor(0, 0, 0, 255)
-      surface.DrawRect(0, 0, surface.ScreenWidth(), surface.ScreenHeight())
+      surface.DrawRect(0, 0, ScrW(), ScrH())
     end
   end
 

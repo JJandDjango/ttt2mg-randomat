@@ -3,9 +3,16 @@ This is a port of the Randomat/Randomat 2.0 addons for TTT2 using the TTT2 Minig
 
 # Minigames
 
-All the minigames here are based on those from the [Randomat 2.0](https://steamcommunity.com/sharedfiles/filedetails/?id=1406495040). There are some places where I've borrowed code from the original, but by and large I've rebuilt its events using the original as a guideline. Whereever possible, I've tried to incorporate TTT2's improved functions/features.
+All the minigames here are based on those from the [Randomat 2.0](https://steamcommunity.com/sharedfiles/filedetails/?id=1406495040), [Owningle's Extra Randomat Events](https://steamcommunity.com/sharedfiles/filedetails/?id=2214440295), or from other Randomat events I've seen in various let's player's TTT videos (sorry I can't point to specific mods, there are so many Randomats). There are some places where I've borrowed code from the original, but by and large I've rebuilt its events using the original as a guideline. Wherever possible, I've tried to incorporate TTT2's improved functions/features.
 
 ## Completed Minigames
+
+### Accuracy Training
+* Name: sh_accuracy_minigame
+* Description: Deals damage to the shooter when they miss, heals them if they hit.
+* ConVars:
+  * ttt2_minigames_accuracy_dmg - Damage dealt on a miss
+  * ttt2_minigames_accuracy_heal  - Health healed on a hit
 
 ### Infinite Ammo
 * Name: sh_ammo_minigame
@@ -22,7 +29,7 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 ### Bees!
 * Name: sh_bees_minigame
 * Description: Spawns hostile bees
-* Addon Dependencies: 
+* Addon Dependencies:
   * [Jenssons TTT BeeNade](https://steamcommunity.com/sharedfiles/filedetails/?id=913310851)
 * ConVars:
   * ttt2_minigames_bees_count - Number of bees spawned per player
@@ -55,6 +62,10 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 * ConVars:
   * ttt2_minigames_cantstop_disable_back - If enabled, players cannot hold their backwards movement key to stop moving.
 
+### Communism
+* Name: sh_communism_minigame
+* Description: Buying equipment buys it for every player
+
 ### Crabs are People!
 * Name: sh_crabs_minigame
 * Description: When players die, headcrabs spawn on their body.
@@ -73,6 +84,15 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 * ConVars:
   * ttt2_minigames_crowbar_dmg  - Damage multiplier for the crowbar
   * ttt2_minigames_crowbar_push - Pushforce multiplier for the crowbar
+
+### Death comes...
+* Name: sh_dying_minigame
+* Description: Deals damage to a random player (or everyone) at a set interval
+* ConVars:
+  * ttt2_minigames_dying_timer  - How often damage is dealt
+  * ttt2_minigames_dying_dmg  - How much damage is dealt
+  * ttt2_minigames_dying_affectall  - Should everyone be damaged simultaneously
+  * ttt2_minigames_dying_cankill  - Should players be able to die from this minigame's damage
 
 ### Random Player Explosions!
 * Name: sh_explode_minigame
@@ -98,6 +118,9 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 * ConVars:
   * ttt2_minigames_freeze_timer - Time between freezes
   * ttt2_minigames_freeze_duration - Duration of freeze
+  * ttt2_minigames_freeze_quotes  - Replace minigame name with ice-related pop culture quotes for pop up
+  * ttt2_minigames_freeze_desc  - Show the minigame explanation
+
 
 ### Bad Gas!
 * Name: sh_gas_minigame
@@ -129,14 +152,11 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 * Description: Gives everyone infinitely restocking harpoons.
 * Addon Dependencies:
   * [[Gamemode: TTT] Traitor Harpoon](https://steamcommunity.com/sharedfiles/filedetails/?id=456189236)
-  * It might work with other mods that add "ttt_m9k_harpoon" and I'm working on potentially fully removing this dependency in the near future
+  * Different weapons can be set with the ttt2_minigames_harpoon_weaponid ConVar
 * ConVars:
   * ttt2_minigames_harpoon_timer  - Delay between giving new harpoons
-  * ttt2_minigames_harpoon_strip  - If enabled, the minigame strips all other weapons. 
-  * ttt2_minigames_harpoon_weaponid - In theory, this should allow for replacing the weapon class for the harpoon with a custom one, but it isn't implemented yet
-* Known bugs / TODO:
-  * Harpoon stripping doesn't work properly
-  * ttt2_minigames_harpoon_weaponid is not implemented
+  * ttt2_minigames_harpoon_strip  - If enabled, the minigame strips all other weapons.
+  * ttt2_minigames_harpoon_weaponid - Set the weapon class of the harpoon (or other weapon), by default is "ttt_m9k_harpoon"
 
 ### Randomness Intensifies
 * Name: sh_intensifies_minigame
@@ -199,17 +219,27 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 * Name: sh_nofall_minigame
 * Description: Disables fall damage
 
+### Pinball
+* Name: sh_pinball_minigame
+* Description: Players bounce off one another
+* ConVars:
+  * ttt2_minigames_pinball_mult - Velocity multiplier for collisions
+
 ### What did I find in my pocket?
 * Name: sh_pocket_minigame
-* Description: Gives every player a random item from the equipment shop. 
+* Description: Gives every player a random item from the equipment shop.
 * Known bugs / TODO:
   * Some items give errors which in turn break the weapon-gifting function so some players may not receive anything.
-  
+
 ### Get Down Mr. President!
 * Name: sh_president_minigame
 * Description: The detective gets bonus health but if they die, everyone on their team (usually innocents) dies too.
 * ConVars:
   * ttt2_minigames_president_bonushp  - Bonus health gained by detective
+
+### We've Updated Our Privacy Policy
+* Name: sh_privacy_minigame
+* Description: Everyone is alerted when equipment is bought
 
 ### Random Health for everyone!
 * Name: sh_randomhealth_minigame
@@ -230,6 +260,13 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 * Known bugs / TODO:
   * Similar issue to Randomness Intesifies
 
+### Recoil
+* Name: sh_recoil_minigame
+* Description: Weapons propel players backwards based on damage
+* ConVars:
+  * ttt2_minigames_recoil_max - Maximum velocity from recoil
+
+
 ### Regeneration
 * Name: sh_regen_minigame
 * Description: Player health regenerates a short delay after taking damage
@@ -240,6 +277,12 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 ### Dead Men Tell No Tales
 * Name: sh_search_minigame
 * Description: Bodies cannot be searched
+
+### Shh... It's a Secret
+* Name: sh_secret_minigame
+* Description: All innocents become Spies
+* Addon Dependencies:
+  * [[TTT2] Spy [ROLE]](https://steamcommunity.com/sharedfiles/filedetails/?id=1683708655)
 
 ### Shrunked
 * Name: sh_shrink_minigame
@@ -283,7 +326,7 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 * ConVars:
   * ttt2_minigames_texplode_timer - Time delay before the traitor explodes
   * ttt2_minigames_texplode_radius  - Size of the traitor's explosion
-  
+
 ### I see dead people
 * Name: sh_visualizer_minigame
 * Description: Players drop a visualizer on death
@@ -301,7 +344,7 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
   * ttt2_minigames_murder_knife_dmg - Knife damage
   * ttt2_minigames_murder_knife_speed - Speed multiplier when holding knife
 * Known bugs / TODO:
-  * Gun pickups to Revolver code is sloppy and doesn't really work consitently
+  * Gun pickups to Revolver code is sloppy and doesn't really work consistently
   * Blind and drop weapon when innocent is shot is inconsistent
   * Knife animations are broken
   * TODO: Add throwing knife
@@ -312,10 +355,6 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 
 
 ## TODO Minigames
-
-### We've updated our privacy policy.
-* Name: sh_privacy_minigame
-* Description: All players can see when someone buys something, no names just roles though.
 
 ### Bad Trip
 * Description: Players temporarily ragdoll when they jump
@@ -328,12 +367,9 @@ All the minigames here are based on those from the [Randomat 2.0](https://steamc
 
 # Other features
 
-## Randomat X
-
-Adds a remake of the Randomat, which has the wokring name of "Randomat X". This SWEP appears in the Detective shop and when used it activates a random minigame (any valid TTT2 Minigame, not just the ones included with this collection).
+## Randomat Weapon moved to [TTT-2/ttt2mg-randomat](https://github.com/TTT-2/ttt2mg-randomat)
 
 Known Bugs / TODO:
 * The icon and model require the old randomat to be installed since I haven't made my own.
 * Add sound effects
 * Add randomat-like functionality to minigames (where events like "Get Down Mr. President" target the owner of the Randomat specifically) if I can figure out a somewhat elegant solution
-
